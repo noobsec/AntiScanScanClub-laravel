@@ -45,9 +45,9 @@ license. Please see the [LICENSE file](LICENSE.md) for more information.
 
 [ico-version]: https://img.shields.io/packagist/v/noobsec/antiscanscanclub-laravel.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/noobsec/antiscanscanclub-laravel.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/noobsec/antiscanscanclub-laravel/master.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/noobsec/AntiScanScanClub-laravel/master.svg?style=flat-square
 [link-packagist]: https://packagist.org/packages/noobsec/antiscanscanclub-laravel
 [link-downloads]: https://packagist.org/packages/noobsec/antiscanscanclub-laravel
-[link-travis]: https://travis-ci.org/noobsec/antiscanscanclub-laravel
+[link-travis]: https://travis-ci.org/noobsec/AntiScanScanClub-laravel
 [link-author]: https://github.com/noobsec
 [link-contributors]: ../../contributors
