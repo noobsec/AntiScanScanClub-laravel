@@ -54,4 +54,4 @@ license. Please see the [LICENSE file](LICENSE.md) for more information.
 [link-travis]: https://travis-ci.org/noobsec/antiscanscanclub
 [link-styleci]: https://styleci.io/repos/12345678
 [link-author]: https://github.com/noobsec
-[link-contributors]: ../../contributors]
+[link-contributors]: ../../contributors
