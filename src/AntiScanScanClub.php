@@ -86,7 +86,8 @@ class AntiScanScanClub
      * Prevention of illegal input based on filter rules file
      *
      * @param \Illuminate\Http\Request $request
-     * @return void
+     * @param bool $blocker add client IP to blacklists if contains illegal input
+     * @return void/bool
      *
      * @throws \Symfony\Component\HttpKernel\Exception\HttpException
     */
@@ -151,7 +152,7 @@ class AntiScanScanClub
      * Remove client IP from blacklists rule
      *
      * @param string $clientIp the visitor client IP
-     * @return array
+     * @return callable
     */
     public function removeFromBlacklists($clientIp) {
     	$searchIp = $this->searchIp($clientIp);

@@ -1,34 +1,159 @@
 # AntiScanScanClub
 
-[![Latest Version on Packagist][ico-version]][link-packagist]
-[![Total Downloads][ico-downloads]][link-downloads]
-[![Build Status][ico-travis]][link-travis]
+[![GitHub (pre-)release](https://img.shields.io/github/release/noobsec/AntiScanScanClub-laravel/all.svg)](https://github.com/noobsec/AntiScanScanClub-laravel/releases)
+[![Build Status](https://img.shields.io/travis/noobsec/AntiScanScanClub-laravel/master.svg)](https://travis-ci.org/noobsec/AntiScanScanClub-laravel)
+[![Total Downloads](https://img.shields.io/packagist/dt/noobsec/antiscanscanclub-laravel.svg)](https://packagist.org/packages/noobsec/antiscanscanclub-laravel)
+![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)
+[![GitHub issues](https://img.shields.io/github/issues/noobsec/AntiScanScanClub-laravel.svg)](https://github.com/noobsec/AntiScanScanClub-laravel/issues)
+![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/noobsec/AntiScanScanClub-laravel.svg)
+[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/noobsec/AntiScanScanClub-laravel/issues)
 
-This is where your description should go. Take a look at [CONTRIBUTING.md](CONTRIBUTING.md) to see a to do list.
+A Laravel Package to Block Automated Scanners from Scanning your Site.
+
+---
+
+-   [Installation](#installation)
+-   [Configuration](#configuration)
+-   [Usage](#usage)
+-   [Changelog](#changelog)
+-   [Contributing](#contributing)
+-   [Security](#security)
+-   [Credits](#credits)
+-   [License](#license)
+-   [Version](#version)
+
+---
 
 ## Installation
-
-Via Composer
 
 ```bash
 $ composer require noobsec/antiscanscanclub-laravel
 ```
 
+## Laravel 5+
+
+### Setup
+
+1. Publish the config file
+
+```ssh
+php artisan vendor:publish --provider="noobsec\AntiScanScanClub\AntiScanScanClubServiceProvider"
+```
+
+2. Create middleware
+
+```bash
+$ php artisan make:middleware AntiScanScanMiddleware
+```
+
+## Configuration
+
+1. Add `ASSC_LIST` in **.env** file:
+
+_**NOTE: Blacklists file will be stored in storage/app/ path**_
+
+```
+ASSC_LIST="blacklists.json"
+```
+
+2. Edit the _AntiScanScanMiddleware_ file _(app/Http/Middleware/AntiScanScanMiddleware.php)_, approx like this:
+
+```php
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use noobsec\AntiScanScanClub\AntiScanScanClub;
+
+class AntiScanScanMiddleware
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
+    public function handle($request, Closure $next)
+    {
+        $ASSC = new AntiScanScanClub();
+        $ASSC->checkIp($request->ip());
+        $ASSC->filterInput($request, TRUE);
+        return $next($request);
+    }
+}
+```
+
+3. Add middleware to global HTTP middleware stack, edit _Kernel_ file _(app/Http/Kernel.php)_:
+
+```php
+    protected $middleware = [
+    	...
+        \App\Http\Middleware\AntiScanScanMiddleware::class,
+    ];
+```
+
 ## Usage
 
-## Change log
+-   **Init AntiScanScanClub source**
+
+```php
+use noobsec\AntiScanScanClub\AntiScanScanClub;
+
+$ASSC = new AntiScanScanClub();
+```
+
+-   **Prevention of illegal input based on filter rules file**
+
+```php
+/**
+ * @param \Illuminate\Http\Request $request
+ * @param bool $blocker add client IP to blacklists if contains illegal input
+ *
+ * @return void/bool
+*/
+$ASSC->filterInput(\Illuminate\Http\Request $request, TRUE);
+```
+
+-   **Check whether the client IP has been blocked or not**
+
+```php
+$clientIp = '127.0.0.1';
+
+var_dump($ASSC->checkIp($clientIp)); // @return void/bool
+```
+
+-   **Add client IP to blacklists rule**
+
+```php
+$clientIp = '127.0.0.1';
+$attack = 'added manually';
+
+var_dump($ASSC->addToBlacklisted($clientIp, $attack)); // @return bool
+```
+
+-   **Remove client IP from blacklists rule**
+
+```php
+$clientIp = '127.0.0.1';
+
+var_dump($ASSC->removeFromBlacklists($clientIp)); // @return bool
+```
+
+-   **Purge and/ clean all client IPs from blacklists**
+
+```php
+var_dump($ASSC->purgeBlacklistsFile()); // @return bool
+```
+
+## Changelog
 
 Please see the [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
-## Testing
-
-```bash
-$ composer test
-```
-
 ## Contributing
 
-Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details and a todolist.
+Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## Security
 
@@ -36,18 +161,14 @@ If you discover any security related issues, please email root@noobsec.org inste
 
 ## Credits
 
--   [noobSecurity][link-author]
--   [All Contributors][link-contributors]
+-   [noobSecurity](https://github.com/noobsec)
+-   [expose](https://github.com/enygma/expose)
+-   [All Contributors](../../contributors)
 
 ## License
 
 license. Please see the [LICENSE file](LICENSE.md) for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/noobsec/antiscanscanclub-laravel.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/noobsec/antiscanscanclub-laravel.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/noobsec/AntiScanScanClub-laravel/master.svg?style=flat-square
-[link-packagist]: https://packagist.org/packages/noobsec/antiscanscanclub-laravel
-[link-downloads]: https://packagist.org/packages/noobsec/antiscanscanclub-laravel
-[link-travis]: https://travis-ci.org/noobsec/AntiScanScanClub-laravel
-[link-author]: https://github.com/noobsec
-[link-contributors]: ../../contributors
+## Version
+
+**Current version is 1.0.0** and still development.
