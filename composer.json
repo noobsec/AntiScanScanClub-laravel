@@ -1,0 +1,43 @@
+{
+    "name": "noobsec/antiscanscanclub",
+    "description": "A Laravel Package to Block Automated Scanners from Scanning your Site",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "noobSecurity",
+            "email": "root@noobsec.org",
+            "homepage": "https://noobsec.org"
+        }
+    ],
+    "homepage": "https://github.com/noobsec/antiscanscanclub",
+    "keywords": ["Laravel", "AntiScanScanClub", "noobSecurity", "noobsec"],
+    "require": {
+        "illuminate/support": "~5"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~7.0",
+        "mockery/mockery": "^1.1",
+        "orchestra/testbench": "~3.0",
+        "sempro/phpunit-pretty-print": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "noobsec\\AntiScanScanClub\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "noobsec\\AntiScanScanClub\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "noobsec\\AntiScanScanClub\\AntiScanScanClubServiceProvider"
+            ],
+            "aliases": {
+                "AntiScanScanClub": "noobsec\\AntiScanScanClub\\Facades\\AntiScanScanClub"
+            }
+        }
+    }
+}
