@@ -8,7 +8,15 @@ use Storage;
 
 class AntiScanScanClub
 {
+    /**
+     * @var string $filterRules
+    */
 	private $filterRules = "filter_rules.json";
+
+    /**
+     * @var string $defaultBlacklists
+    */
+    private $defaultBlacklists = "blacklists.json";
 
     /**
      * AntiScanScanClub.
@@ -64,13 +72,13 @@ class AntiScanScanClub
      * Check whether the client IP has been blocked or not
      *
      * @param string $clientIp the visitor client IP
-     * @return void
+     * @return void/bool
     */
     public function checkIp($clientIp) {
     	if ($this->searchIp($clientIp) !== FALSE) {
 			return abort($this->abort);
     	} else {
-			$this->purgeBlacklistsFile();
+			return FALSE;
     	}
     }
 
@@ -150,7 +158,7 @@ class AntiScanScanClub
 		if ($searchIp !== FALSE) {
 	    	unset($this->list_object[$searchIp]);
 	    }
-	    return $this->list_object;
+	    return $this->writeToBlacklistsFile($this->list_object);
 	}
 
 
@@ -160,7 +168,7 @@ class AntiScanScanClub
      * @return callable
     */
     public function purgeBlacklistsFile() {
-    	return $this->writeToBlacklistsFile();
+    	return $this->writeToBlacklistsFile([]);
     }
 
 
@@ -173,7 +181,7 @@ class AntiScanScanClub
      * @throws \Exception
     */
     private function writeToBlacklistsFile($data = []) {
-    	$write = Storage::put($this->list, json_encode($data, JSON_PRETTY_PRINT));
+    	$write = Storage::put(($this->list == NULL ? $this->defaultBlacklists : $this->list), json_encode($data, JSON_PRETTY_PRINT));
 
     	if ($write === FALSE) {
     		throw new \Exception("Error While writing to blacklists File!", TRUE);
