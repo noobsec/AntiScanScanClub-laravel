@@ -1,5 +1,5 @@
 {
-    "name": "noobsec/antiscanscanclub",
+    "name": "noobsec/AntiScanScanClub-laravel",
     "description": "A Laravel Package to Block Automated Scanners from Scanning your Site",
     "license": "MIT",
     "authors": [
@@ -9,7 +9,7 @@
             "homepage": "https://noobsec.org"
         }
     ],
-    "homepage": "https://github.com/noobsec/antiscanscanclub",
+    "homepage": "https://github.com/noobsec/AntiScanScanClub-laravel",
     "keywords": ["Laravel", "AntiScanScanClub", "noobSecurity", "noobsec"],
     "require": {
         "illuminate/support": "~5"
