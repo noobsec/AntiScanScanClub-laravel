@@ -12,7 +12,7 @@ This is where your description should go. Take a look at [CONTRIBUTING.md](CONTR
 Via Composer
 
 ```bash
-$ composer require noobsec/AntiScanScanClub-laravel
+$ composer require noobsec/antiscanscanclub-laravel
 ```
 
 ## Usage
@@ -44,13 +44,13 @@ If you discover any security related issues, please email root@noobsec.org inste
 
 license. Please see the [LICENSE file](LICENSE.md) for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/noobsec/AntiScanScanClub-laravel.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/noobsec/AntiScanScanClub-laravel.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/noobsec/AntiScanScanClub-laravel/master.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/noobsec/antiscanscanclub-laravel.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/noobsec/antiscanscanclub-laravel.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/noobsec/antiscanscanclub-laravel/master.svg?style=flat-square
 [ico-styleci]: https://styleci.io/repos/12345678/shield
-[link-packagist]: https://packagist.org/packages/noobsec/AntiScanScanClub-laravel
-[link-downloads]: https://packagist.org/packages/noobsec/AntiScanScanClub-laravel
-[link-travis]: https://travis-ci.org/noobsec/AntiScanScanClub-laravel
+[link-packagist]: https://packagist.org/packages/noobsec/antiscanscanclub-laravel
+[link-downloads]: https://packagist.org/packages/noobsec/antiscanscanclub-laravel
+[link-travis]: https://travis-ci.org/noobsec/antiscanscanclub-laravel
 [link-styleci]: https://styleci.io/repos/12345678
 [link-author]: https://github.com/noobsec
 [link-contributors]: ../../contributors
