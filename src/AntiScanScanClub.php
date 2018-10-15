@@ -58,7 +58,7 @@ class AntiScanScanClub
     */
     private function searchIp($clientIp) {
     	try {
-    		if (($key = array_search($clientIp, array_column($this->list_object, "ip"), TRUE)) !== FALSE) {
+    		if (($key = array_search($clientIp, array_column($this->list_object, "client_ip"), TRUE)) !== FALSE) {
 		    	return $key;
 		    } else {
 		    	return FALSE;
@@ -85,13 +85,14 @@ class AntiScanScanClub
     /**
      * Prevention of illegal input based on filter rules file
      *
-     * @param \Illuminate\Http\Request $request
+     * @param array $data the request data
      * @param bool $blocker add client IP to blacklists if contains illegal input
+     * @param $clientIp the visitor client IP
      * @return void/bool
      *
      * @throws \Symfony\Component\HttpKernel\Exception\HttpException
     */
-    public function filterInput(Request $request, $blocker = FALSE) {
+    public function filterInput($data = [], $blocker = FALSE, $clientIp) {
     	$filterRules = __DIR__ . "/" . $this->filterRules;
     	$getRule = @file_get_contents($filterRules);
 
@@ -101,10 +102,10 @@ class AntiScanScanClub
 
     	$objectRules = json_decode($getRule, TRUE)['filters'];
 
-    	foreach ($request->all() as $key => $value) {
+    	foreach ($data as $key => $value) {
 	    	foreach ($objectRules as $key => $object) {
 	    		if (preg_match("/" . $object['rule'] . "/", $value)) {
-	    			if ($blocker === TRUE) $this->addToBlacklisted($request->ip(), $object['description'] . " (" . $value . ")");
+	    			if ($blocker === TRUE) $this->addToBlacklisted($clientIp, $object['description'] . " (" . $value . ")");
 	    			return abort($this->abort);
 	    		}
 	    	}
@@ -123,9 +124,9 @@ class AntiScanScanClub
     public function addToBlacklisted($clientIp, $attack = NULL) {
     	$add = $this->list_object;
     	$data = [
-    		'ip' => $clientIp,
-    		'attack' => ($attack = NULL ? "added manually" : $attack),
-    		'time' => date('Y-m-d H:i:s')
+    		'client_ip' => $clientIp,
+    		'attack_type' => ($attack = NULL ? "added manually" : $attack),
+    		'date_time' => date('Y-m-d H:i:s')
     	];
     	array_push($add, $data);
 
@@ -134,7 +135,7 @@ class AntiScanScanClub
 
 
 	/**
-     * Run rules to clean client IP from blacklists
+     * Clean the client IP from blacklists
      *
      * @return array
     */
@@ -142,7 +143,7 @@ class AntiScanScanClub
 		foreach ($this->list_object as $key => $object) {
 			$getDiffInHours = (int) round(abs(strtotime('now') - strtotime($object['time'])) / 3600, 0);
 			if ($getDiffInHours >= $this->options['expired']) {
-				return $this->removeFromBlacklists($object['ip']);
+				return $this->removeFromBlacklists($object['client_ip']);
 			}
 		}
 	}
