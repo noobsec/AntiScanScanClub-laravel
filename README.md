@@ -79,7 +79,14 @@ class AntiScanScanMiddleware
     {
         $ASSC = new AntiScanScanClub();
         $ASSC->checkIp($request->ip());
-        $ASSC->filterInput($request, TRUE);
+
+        if ($request->isMethod('GET') && $request->getQueryString() === NULL) {
+            $data = ['path' => $request->getPathInfo()];
+        } else {
+            $data = $request->all();
+        }
+
+        $ASSC->filterInput($data, TRUE, $request->ip());
         return $next($request);
     }
 }
@@ -170,7 +177,7 @@ If you discover any security related issues, please email root@noobsec.org inste
 
 ## License
 
-license. Please see the [LICENSE file](LICENSE.md) for more information.
+license. Please see the [LICENSE file](LICENSE) for more information.
 
 ## Version
 
