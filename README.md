@@ -50,7 +50,7 @@ $ php artisan make:middleware AntiScanScanMiddleware
 
 1. Add `ASSC_LIST` in **.env** file:
 
-_**NOTE: Blacklists file will be stored in storage/app/ path**_
+_**NOTE: Blacklists file will be stored in `storage/app/` path**_
 
 ```
 ASSC_LIST="blacklists.json"
@@ -104,18 +104,6 @@ use noobsec\AntiScanScanClub\AntiScanScanClub;
 $ASSC = new AntiScanScanClub();
 ```
 
--   **Prevention of illegal input based on filter rules file**
-
-```php
-/**
- * @param \Illuminate\Http\Request $request
- * @param bool $blocker add client IP to blacklists if contains illegal input
- *
- * @return void/bool
-*/
-$ASSC->filterInput(\Illuminate\Http\Request $request, TRUE);
-```
-
 -   **Check whether the client IP has been blocked or not**
 
 ```php
@@ -124,16 +112,31 @@ $clientIp = '127.0.0.1';
 var_dump($ASSC->checkIp($clientIp)); // @return void/bool
 ```
 
--   **Add client IP to blacklists rule**
+-   **Add client IP to blacklists files**
 
 ```php
 $clientIp = '127.0.0.1';
-$attack = 'added manually';
+$attack_type = 'Added manually';
 
 var_dump($ASSC->addToBlacklisted($clientIp, $attack)); // @return bool
 ```
 
--   **Remove client IP from blacklists rule**
+-   **Prevention of illegal input based on filter rules**
+
+**_NOTE: If you call `filterInput()`, you no longer need to call `addToBlacklisted()` method._**
+
+```php
+$data = [
+	"input" => "Test payload",
+	"textarea" => "<object/onerror=write`1`//"
+];
+$blocker = TRUE;
+$clientIp = '127.0.0.1';
+
+$ASSC->filterInput($data, $blocker, $clientIp); // @return void/bool
+```
+
+-   **Remove client IP from blacklists file**
 
 ```php
 $clientIp = '127.0.0.1';
@@ -141,7 +144,7 @@ $clientIp = '127.0.0.1';
 var_dump($ASSC->removeFromBlacklists($clientIp)); // @return bool
 ```
 
--   **Purge and/ clean all client IPs from blacklists**
+-   **Purge and/ clean all client IPs from blacklists file**
 
 ```php
 var_dump($ASSC->purgeBlacklistsFile()); // @return bool
@@ -171,4 +174,4 @@ license. Please see the [LICENSE file](LICENSE.md) for more information.
 
 ## Version
 
-**Current version is 1.0.0** and still development.
+**Current version is 1.0.1** and still development.
