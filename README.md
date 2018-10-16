@@ -165,7 +165,7 @@ If you discover any security related issues, please email root@noobsec.org inste
 ## Credits
 
 -   [noobSecurity](https://github.com/noobsec)
--   [expose](https://github.com/enygma/expose)
+-   [enygma](https://github.com/enygma) _(for filter rules)_
 -   [All Contributors](../../contributors)
 
 ## License
