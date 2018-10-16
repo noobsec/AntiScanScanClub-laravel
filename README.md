@@ -6,7 +6,7 @@
 [![LICENSE](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/noobsec/AntiScanScanClub-laravel.svg)](https://github.com/noobsec/AntiScanScanClub-laravel/issues)
 [![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/noobsec/AntiScanScanClub-laravel.svg)](../../pulls?q=is%3Apr+is%3Aclosed)
-[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/noobsec/AntiScanScanClub-laravel/issues)
+[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](https://github.com/noobsec/AntiScanScanClub-laravel/issues)
 
 A Laravel Package to Block Automated Scanners from Scanning your Site.
 
@@ -78,15 +78,22 @@ class AntiScanScanMiddleware
     public function handle($request, Closure $next)
     {
         $ASSC = new AntiScanScanClub();
+        $blocker = TRUE;
+        $ASSC->checkIp($request->ip());
+
         $ASSC->checkIp($request->ip());
 
         if ($request->isMethod('GET') && $request->getQueryString() === NULL) {
-            $data = ['path' => $request->getPathInfo()];
+            /**
+             * Prevention of access to credentials and/ important files/path
+             * (e.g: wp-admin.php, .git/, backups.tar.gz, www.sql)
+             */
+
+            $ASSC->filterFile($request->getPathInfo(), $blocker, $request->ip());
         } else {
-            $data = $request->all();
+            $ASSC->filterInput($request->all(), $blocker, $request->ip());
         }
 
-        $ASSC->filterInput($data, TRUE, $request->ip());
         return $next($request);
     }
 }
@@ -96,7 +103,7 @@ class AntiScanScanMiddleware
 
 ```php
     protected $middleware = [
-    	...
+        ...
         \App\Http\Middleware\AntiScanScanMiddleware::class,
     ];
 ```
@@ -130,17 +137,29 @@ var_dump($ASSC->addToBlacklisted($clientIp, $attack)); // @return bool
 
 -   **Prevention of illegal input based on filter rules**
 
-**_NOTE: If you call `filterInput()`, you no longer need to call `addToBlacklisted()` method._**
+**_NOTE: If you call this, you no longer need to call `addToBlacklisted()` method._**
 
 ```php
 $data = [
-	"input" => "Test payload",
-	"textarea" => "<object/onerror=write`1`//"
+    "input" => "Test payload",
+    "textarea" => "<object/onerror=write`1`//"
 ];
 $blocker = TRUE;
 $clientIp = '127.0.0.1';
 
 $ASSC->filterInput($data, $blocker, $clientIp); // @return void/bool
+```
+
+-   **Prevention of access to credentials and/ important files/path**
+
+**e.g: `wp-admin.php`, `.git/`, `backups.tar.gz`, `www.sql`** _(see many more at [filter_files.txt](src/filter_files.txt))_
+
+```php
+$url = "/wp-admin.php";
+$blocker = TRUE;
+$clientIp = '127.0.0.1';
+
+$ASSC->filterFile($url, $blocker, $clientIp); // @return void/bool
 ```
 
 -   **Remove client IP from blacklists file**
@@ -172,7 +191,9 @@ If you discover any security related issues, please email root@noobsec.org inste
 ## Credits
 
 -   [noobSecurity](https://github.com/noobsec)
--   [expose](https://github.com/enygma/expose)
+-   [dwisiswant0](https://github.com/dwisiswant0)
+-   [enygma](https://github.com/enygma)
+-   [maurosoria](https://github.com/maurosoria)
 -   [All Contributors](../../contributors)
 
 ## License
@@ -181,4 +202,4 @@ license. Please see the [LICENSE file](LICENSE) for more information.
 
 ## Version
 
-**Current version is 1.0.1** and still development.
+**Current version is 1.0.2** and still development.

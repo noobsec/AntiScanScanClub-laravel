@@ -14,6 +14,11 @@ class AntiScanScanClub
 	private $filterRules = "filter_rules.json";
 
     /**
+     * @var string $filterFiles
+    */
+    private $filterFiles = "filter_files.txt";
+
+    /**
      * @var string $defaultBlacklists
     */
     private $defaultBlacklists = "blacklists.json";
@@ -112,6 +117,39 @@ class AntiScanScanClub
     	}
 
     	return FALSE;
+    }
+
+
+    /**
+     * Prevention of access to credentials and/ important files/path
+     * e.g: wp-admin.php, .git/, backups.tar.gz, www.sql (see many more at filter_files.txt)
+     *
+     * @param array $data the request data
+     * @param bool $blocker add client IP to blacklists if trying to credentials and/ important files/path
+     * @param $clientIp the visitor client IP
+     * @return void/bool
+     *
+     * @throws \Symfony\Component\HttpKernel\Exception\HttpException
+    */
+    public function filterFile($url = NULL, $blocker = FALSE, $clientIp) {
+        $filterFiles = __DIR__ . "/" . $this->filterFiles;
+        $getFile = @file_get_contents($filterFiles);
+
+        if ($getFile === FALSE) {
+            throw new \Exception("Error Processing filter Files File!", TRUE);  
+        }
+
+        $objectFiles = file($filterFiles);
+
+        foreach ($objectFiles as $key => $value) {
+            $file = trim($value);
+            if (strpos($url, trim($file)) !== FALSE) {
+                if ($blocker === TRUE) $this->addToBlacklisted($clientIp, "Trying to access " . $file);
+                return abort($this->abort);
+            }
+        }
+
+        return FALSE;
     }
 
     /**
