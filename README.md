@@ -3,9 +3,9 @@
 [![GitHub (pre-)release](https://img.shields.io/github/release/noobsec/AntiScanScanClub-laravel/all.svg)](https://github.com/noobsec/AntiScanScanClub-laravel/releases)
 [![Build Status](https://img.shields.io/travis/noobsec/AntiScanScanClub-laravel/master.svg)](https://travis-ci.org/noobsec/AntiScanScanClub-laravel)
 [![Total Downloads](https://img.shields.io/packagist/dt/noobsec/antiscanscanclub-laravel.svg)](https://packagist.org/packages/noobsec/antiscanscanclub-laravel)
-![GitHub](https://img.shields.io/github/license/mashape/apistatus.svg)
+[![LICENSE](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/noobsec/AntiScanScanClub-laravel.svg)](https://github.com/noobsec/AntiScanScanClub-laravel/issues)
-![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/noobsec/AntiScanScanClub-laravel.svg)
+[![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed/noobsec/AntiScanScanClub-laravel.svg)](../../pulls?q=is%3Apr+is%3Aclosed)
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/noobsec/AntiScanScanClub-laravel/issues)
 
 A Laravel Package to Block Automated Scanners from Scanning your Site.
@@ -79,7 +79,14 @@ class AntiScanScanMiddleware
     {
         $ASSC = new AntiScanScanClub();
         $ASSC->checkIp($request->ip());
-        $ASSC->filterInput($request, TRUE);
+
+        if ($request->isMethod('GET') && $request->getQueryString() === NULL) {
+            $data = ['path' => $request->getPathInfo()];
+        } else {
+            $data = $request->all();
+        }
+
+        $ASSC->filterInput($data, TRUE, $request->ip());
         return $next($request);
     }
 }
@@ -170,7 +177,7 @@ If you discover any security related issues, please email root@noobsec.org inste
 
 ## License
 
-license. Please see the [LICENSE file](LICENSE.md) for more information.
+license. Please see the [LICENSE file](LICENSE) for more information.
 
 ## Version
 
