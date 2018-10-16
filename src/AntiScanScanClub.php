@@ -143,7 +143,7 @@ class AntiScanScanClub
 
         foreach ($objectFiles as $key => $value) {
             $file = trim($value);
-            if (strpos($url, trim($file)) !== FALSE) {
+            if (substr($url, 1) === trim($file)) {
                 if ($blocker === TRUE) $this->addToBlacklisted($clientIp, "Trying to access " . $file);
                 return abort($this->abort);
             }
