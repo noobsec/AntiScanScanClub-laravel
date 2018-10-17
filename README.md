@@ -81,8 +81,6 @@ class AntiScanScanMiddleware
         $blocker = TRUE;
         $ASSC->checkIp($request->ip());
 
-        $ASSC->checkIp($request->ip());
-
         if ($request->isMethod('GET') && $request->getQueryString() === NULL) {
             /**
              * Prevention of access to credentials and/ important files/path
