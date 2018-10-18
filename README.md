@@ -174,6 +174,18 @@ var_dump($ASSC->removeFromBlacklists($clientIp)); // @return bool
 var_dump($ASSC->purgeBlacklistsFile()); // @return bool
 ```
 
+-   **Whitelisting files/path from filterFile() rejection**
+
+```php
+var_dump($ASSC->whitelistFile('wp-admin.php')); // @return bool
+```
+
+-   **Restoring filterFile() rules to default**
+
+```php
+var_dump($ASSC->restoreFilterFiles()); // @return bool
+```
+
 ## Changelog
 
 Please see the [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
