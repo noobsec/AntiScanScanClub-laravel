@@ -200,4 +200,4 @@ license. Please see the [LICENSE file](LICENSE) for more information.
 
 ## Version
 
-**Current version is 1.0.2-dev1** and still development.
+**Current version is 1.0.3** and still development.
