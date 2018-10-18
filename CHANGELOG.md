@@ -2,6 +2,12 @@
 
 All notable changes to `AntiScanScanClub` will be documented in this file.
 
+## Version 2.0.0
+
+### Added
+-   whitelistFile() method, for whitelisting files/path and restoring filter_files.txt
+-   restoreFilterFiles() method to restoring filter_files.txt to default
+
 ## Version 1.0.3
 
 ### Fixed
