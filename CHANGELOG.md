@@ -2,6 +2,11 @@
 
 All notable changes to `AntiScanScanClub` will be documented in this file.
 
+## Version 1.0.3
+
+### Fixed
+-   Fix filterInput() bug failed to handle array input fields (reported by [@mirfansulaiman](https://github.com/mirfansulaiman))
+
 ## Version 1.0.2-dev1
 
 ### Fixed
