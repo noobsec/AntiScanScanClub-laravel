@@ -109,7 +109,17 @@ class AntiScanScanClub
 
     	foreach ($data as $key => $value) {
 	    	foreach ($objectRules as $key => $object) {
-	    		if (preg_match("/" . $object['rule'] . "/", $value)) {
+                if (is_array($value)) {
+                    foreach ($value as $key => $array) {
+                        $filtered = preg_match("/" . $object['rule'] . "/", $array);
+                        $value = $array;
+                        if ($filtered) break;
+                    }
+                } else {
+                    $filtered = preg_match("/" . $object['rule'] . "/", $value);
+                }
+
+	    		if ($filtered) {
 	    			if ($blocker === TRUE) $this->addToBlacklisted($clientIp, $object['description'] . " (" . $value . ")");
 	    			return abort($this->abort);
 	    		}
