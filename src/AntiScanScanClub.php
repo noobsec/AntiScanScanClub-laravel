@@ -10,18 +10,23 @@ class AntiScanScanClub
 {
     /**
      * @var string $filterRules
-    */
+     */
 	private $filterRules = "filter_rules.json";
 
     /**
      * @var string $filterFiles
-    */
+     */
     private $filterFiles = "filter_files.txt";
 
     /**
      * @var string $defaultBlacklists
-    */
+     */
     private $defaultBlacklists = "blacklists.json";
+
+    /**
+     * @var string $remoteRepo
+     */
+    private $remoteRepo = "https://github.com/noobsec/AntiScanScanClub-laravel";
 
     /**
      * AntiScanScanClub.
@@ -238,5 +243,53 @@ class AntiScanScanClub
     	} else {
     		return TRUE;
     	}
+    }
+
+    /**
+     * Whitelisting credentials and/ important files/path
+     *
+     * @param string $search is the name of files/path do you want to whitelisted
+     * @return bool
+     */
+    public function whitelistFile($search) {
+        $filterFiles = __DIR__ . "/" . $this->filterFiles;
+        $filterFile = file($filterFiles);
+        $status = FALSE;
+
+        foreach ($filterFile as $key => $value) {
+            if (trim($value) === $search) {
+                $offset = $key;
+                $status = TRUE;
+                break;
+            }
+        }
+
+        if ($status !== FALSE) {
+            unset($filterFile[$offset]);
+            file_put_contents($filterFiles, join($filterFile));
+        }
+
+        return $status;
+    }
+
+    /**
+    * Restore filter_files.txt lists to default
+    *
+    * @return bool
+    */
+    public function restoreFilterFiles() {
+        $defaultFilterFiles = @file_get_contents($this->remoteRepo . "/raw/master/src/" . $this->filterFiles);
+
+        if ($defaultFilterFiles === FALSE) {
+            throw new \Exception("Error While Getting default filter files from Repo", 1);
+        }
+
+        $write = file_put_contents(__DIR__ . "/" . $this->filterFiles, $defaultFilterFiles);
+
+        if ($write === 84213) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
 }
