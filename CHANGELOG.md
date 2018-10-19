@@ -2,6 +2,14 @@
 
 All notable changes to `AntiScanScanClub` will be documented in this file.
 
+## Version 2.0.1
+
+### Added
+-   getPublicFiles() method for get all files in public path recursively
+-   getAllRoutes() method for get uri of all registered routes
+-   whitelistPublicFiles() method for whitelisting all public files recursively
+-   whitelistAllRoutes() method for whitelisting uri of all registered routes
+
 ## Version 2.0.0
 
 ### Added
