@@ -4,7 +4,9 @@ namespace noobsec\AntiScanScanClub;
 
 use Illuminate\Foundation;
 use Illuminate\Http\Request;
-use Storage;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 class AntiScanScanClub
 {
@@ -243,6 +245,78 @@ class AntiScanScanClub
     	} else {
     		return TRUE;
     	}
+    }
+
+    /**
+     * Get all files in public path recursively
+     *
+     * @return array
+     */
+    private function getPublicFiles() {
+        $getFiles = File::allFiles(public_path());
+        $files = [];
+
+        foreach ($getFiles as $key => $value) {
+            $files[] = $value->getRelativePathname();
+        }
+
+        return $files;
+    }
+
+    /**
+     * Get uri of all registered routes
+     *
+     * @return array
+     */
+    private function getAllRoutes() {
+        $getRoutes = Route::getRoutes()->getIterator();
+        $routes = [];
+
+        foreach ($getRoutes as $key => $route) {
+            $routes[] = $route->uri();
+        }
+
+        foreach ($routes as $key => $value) {
+            if (preg_match("/\{.*?\}/", $value)) {
+                unset($routes[$key]);
+            }
+        }
+
+        return array_values($routes);
+    }
+
+    /**
+     * Whitelisting all public files recursively
+     *
+     * @return array
+     */
+    public function whitelistPublicFiles() {
+        $getPublicFiles = $this->getPublicFiles();
+        $results = [];
+
+        foreach ($getPublicFiles as $key => $file) {
+            $whitelistFile = $this->whitelistFile($file);
+            $results[] = [ $file => $whitelistFile ];
+        }
+
+        return $results;
+    }
+
+    /**
+     * Whitelisting uri of all registered routes
+     *
+     * @return array
+     */
+    public function whitelistAllRoutes() {
+        $getAllRoutes = $this->getAllRoutes();
+        $results = [];
+
+        foreach ($getAllRoutes as $key => $route) {
+            $whitelistFile = $this->whitelistFile($route);
+            $results[] = [ $route => $whitelistFile ];
+        }
+
+        return $results;
     }
 
     /**
