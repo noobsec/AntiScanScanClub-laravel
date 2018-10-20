@@ -174,10 +174,22 @@ var_dump($ASSC->removeFromBlacklists($clientIp)); // @return bool
 var_dump($ASSC->purgeBlacklistsFile()); // @return bool
 ```
 
--   **Whitelisting files/path from filterFile() rejection**
+-   **Whitelisting one files/path from filterFile() rejection**
 
 ```php
 var_dump($ASSC->whitelistFile('wp-admin.php')); // @return bool
+```
+
+-   **Whitelisting all public files recursively from filterFile() rejection**
+
+```php
+var_dump(whitelistPublicFiles()); // @return array
+```
+
+-   **Whitelisting uri of all registered routes from filterFile() rejection**
+
+```php
+var_dump(whitelistAllRoutes()); // @return array
 ```
 
 -   **Restoring filterFile() rules to default**
