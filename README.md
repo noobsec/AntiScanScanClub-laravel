@@ -30,6 +30,8 @@ A Laravel Package to Block Automated Scanners from Scanning your Site.
 $ composer require noobsec/antiscanscanclub-laravel
 ```
 
+-- Please keep up-to-date this package to latest commit
+
 ## Laravel 5+
 
 ### Setup
@@ -135,8 +137,6 @@ var_dump($ASSC->addToBlacklisted($clientIp, $attack)); // @return bool
 
 -   **Prevention of illegal input based on filter rules**
 
-**_NOTE: If you call this, you no longer need to call `addToBlacklisted()` method._**
-
 ```php
 $data = [
     "input" => "Test payload",
@@ -197,6 +197,11 @@ var_dump(whitelistAllRoutes()); // @return array
 ```php
 var_dump($ASSC->restoreFilterFiles()); // @return bool
 ```
+
+### NOTE
+
+-   If you call `filterInput()` and/ `filterFile()` method, you no longer need to call `addToBlacklisted()` method.
+-   Or if you want to call `whitelistFile()`, `whitelistPublicFiles()` and/ `whitelistAllRoutes()` method, make sure this is called before `filterFile()` and/ `searchIp()` method _(or comment these methods, please check middleware)_.
 
 ## Changelog
 
