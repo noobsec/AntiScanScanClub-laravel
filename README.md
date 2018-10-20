@@ -32,7 +32,11 @@ A Laravel Package to Block Automated Scanners from Scanning your Site.
 $ composer require noobsec/antiscanscanclub-laravel
 ```
 
--- Please keep up-to-date this package to latest commit
+-   Please keep up-to-date this package to latest commit
+
+```bash
+$ composer require noobsec/antiscanscanclub-laravel:dev-master
+```
 
 ## Laravel 5+
 
