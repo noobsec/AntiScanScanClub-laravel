@@ -10,6 +10,8 @@
 
 A Laravel Package to Block Automated Scanners from Scanning your Site.
 
+![how_antiscanscanclub_work](https://user-images.githubusercontent.com/25837540/47261277-ae3b5480-d4f5-11e8-8055-aaf090f198c4.png)
+
 ---
 
 -   [Installation](#installation)
