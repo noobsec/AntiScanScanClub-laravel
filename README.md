@@ -204,6 +204,14 @@ var_dump(whitelistAllRoutes()); // @return array
 var_dump($ASSC->restoreFilterFiles()); // @return bool
 ```
 
+-   **Add file and/ path to filterFile() rejection**
+
+```php
+$file = "api/adminLists";
+
+var_dump(addToFilterFiles($file)); // @return integer/bool
+```
+
 ### NOTE
 
 -   If you call `filterInput()` and/ `filterFile()` method, you no longer need to call `addToBlacklisted()` method.
@@ -235,4 +243,4 @@ license. Please see the [LICENSE file](LICENSE) for more information.
 
 ## Version
 
-**Current version is 2.0.1** and still development.
+**Current version is 2.0.2** and still development.
