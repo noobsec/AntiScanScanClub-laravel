@@ -11,9 +11,14 @@ use Illuminate\Support\Facades\Storage;
 class AntiScanScanClub
 {
     /**
+     * @var string $defaultBlacklists
+     */
+    private $defaultBlacklists = "blacklists.json";
+
+    /**
      * @var string $filterRules
      */
-	private $filterRules = "filter_rules.json";
+    private $filterRules = "filter_rules.json";
 
     /**
      * @var string $filterFiles
@@ -21,14 +26,14 @@ class AntiScanScanClub
     private $filterFiles = "filter_files.txt";
 
     /**
-     * @var string $defaultBlacklists
+     * @var constant string REMOTE_REPO
      */
-    private $defaultBlacklists = "blacklists.json";
+    private const REMOTE_REPO = "https://github.com/noobsec/AntiScanScanClub-laravel";
 
     /**
-     * @var string $remoteRepo
+     * @var constant string FILTER_FILES_MD5
      */
-    private $remoteRepo = "https://github.com/noobsec/AntiScanScanClub-laravel";
+    private const FILTER_FILES_MD5 = "05c2fe4cad6dc3ea1a3bf2becdb9153f";
 
     /**
      * AntiScanScanClub.
@@ -117,25 +122,21 @@ class AntiScanScanClub
     	foreach ($data as $key => $value) {
 	    	foreach ($objectRules as $key => $object) {
                 if (is_array($value)) {
-                    foreach ($value as $key => $array) {
-                        $filtered = preg_match("/" . $object['rule'] . "/", $array);
-                        $value = $array;
-                        if ($filtered) break;
-                    }
+                    return $this->filterInput($value, $blocker, $clientIp);
                 } else {
                     $filtered = preg_match("/" . $object['rule'] . "/", $value);
+                    if ($filtered) break;
                 }
+            }
+        }
 
-	    		if ($filtered) {
-	    			if ($blocker === TRUE) $this->addToBlacklisted($clientIp, $object['description'] . " (" . $value . ")");
-	    			return abort($this->abort);
-	    		}
-	    	}
-    	}
+		if ($filtered) {
+			if ($blocker === TRUE) $this->addToBlacklisted($clientIp, $object['description'] . " (" . $value . ")");
+			return abort($this->abort);
+		}
 
     	return FALSE;
     }
-
 
     /**
      * Prevention of access to credentials and/ important files/path
@@ -149,6 +150,23 @@ class AntiScanScanClub
      * @throws \Symfony\Component\HttpKernel\Exception\HttpException
     */
     public function filterFile($url = NULL, $blocker = FALSE, $clientIp) {
+        $filterFileFind = $this->filterFileFind($url);
+
+        if ($filterFileFind === TRUE) {
+            if ($blocker === TRUE) $this->addToBlacklisted($clientIp, "Trying to access " . $url);
+            return abort($this->abort);
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
+     * Check whether the destination file and/ path is in the filter_files.txt
+     *
+     * @param string $file and/ path to check 
+     * @return bool
+    */
+    private function filterFileFind($file) {
         $filterFiles = __DIR__ . "/" . $this->filterFiles;
         $getFile = @file_get_contents($filterFiles);
 
@@ -159,10 +177,9 @@ class AntiScanScanClub
         $objectFiles = file($filterFiles);
 
         foreach ($objectFiles as $key => $value) {
-            $file = trim($value);
-            if (substr($url, 1) === trim($file)) {
-                if ($blocker === TRUE) $this->addToBlacklisted($clientIp, "Trying to access " . $file);
-                return abort($this->abort);
+            $list = trim($value);
+            if (substr($file, 1) === trim($list)) {
+                return TRUE;
             }
         }
 
@@ -188,6 +205,22 @@ class AntiScanScanClub
     	return $this->writeToBlacklistsFile($add);
     }
 
+    /**
+     * Add file and/ path to filter_files.txt
+     *
+     * @param string $file and/ path
+     * @return integer/bool
+    */
+    public function addToFilterFiles($file) {
+        $filterFiles = __DIR__ . "/" . $this->filterFiles;
+        $filterFileFind = $this->filterFileFind($file);
+
+        if ($filterFileFind === FALSE) {
+            return file_put_contents($filterFiles, $file, FILE_APPEND);
+        } else {
+            return FALSE;
+        }
+    }
 
 	/**
      * Clean the client IP from blacklists
@@ -203,7 +236,6 @@ class AntiScanScanClub
 		}
 	}
 
-
     /**
      * Remove client IP from blacklists rule
      *
@@ -218,7 +250,6 @@ class AntiScanScanClub
 	    return $this->writeToBlacklistsFile($this->list_object);
 	}
 
-
 	/**
      * Purge and/ clean all client IPs from blacklists
      *
@@ -227,7 +258,6 @@ class AntiScanScanClub
     public function purgeBlacklistsFile() {
     	return $this->writeToBlacklistsFile([]);
     }
-
 
     /**
      * Write visitor data to blacklists file
@@ -347,23 +377,52 @@ class AntiScanScanClub
     }
 
     /**
-    * Restore filter_files.txt lists to default
+    * MD5 checksum for local filter_files.txt
     *
     * @return bool
     */
-    public function restoreFilterFiles() {
-        $defaultFilterFiles = @file_get_contents($this->remoteRepo . "/raw/master/src/" . $this->filterFiles);
+    public function md5LocalFilterFiles() {
+        $localFilterFiles = __DIR__ . "/" . $this->filterFiles;
+
+        if (md5_file($localFilterFiles) === self::FILTER_FILES_MD5) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+
+    /**
+    * Getting filter_files.txt from remote repository
+    *
+    * @return string
+    */
+    private function getRemoteFilterFiles() {
+        $defaultFilterFiles = @file_get_contents(self::REMOTE_REPO . "/raw/master/src/" . $this->filterFiles);
 
         if ($defaultFilterFiles === FALSE) {
             throw new \Exception("Error While Getting default filter files from Repo", 1);
         }
 
-        $write = file_put_contents(__DIR__ . "/" . $this->filterFiles, $defaultFilterFiles);
+        return $defaultFilterFiles;
+    }
 
-        if ($write === 84213) {
-            return TRUE;
+    /**
+    * Restore filter_files.txt lists to default
+    *
+    * @return bool
+    */
+    public function restoreFilterFiles() {
+        $remoteFilterFiles = $this->getRemoteFilterFiles();
+
+        if ($this->md5LocalFilterFiles() === FALSE) {
+            $write = file_put_contents(__DIR__ . "/" . $this->filterFiles, $remoteFilterFiles);
+            if ($write === 84213 && $this->md5LocalFilterFiles() === TRUE) {
+                return TRUE;
+            } else {
+                return FALSE;
+            }
         } else {
-            return FALSE;
+            return TRUE;
         }
     }
 }
