@@ -198,18 +198,18 @@ var_dump(whitelistPublicFiles()); // @return array
 var_dump(whitelistAllRoutes()); // @return array
 ```
 
--   **Restoring filterFile() rules to default**
-
-```php
-var_dump($ASSC->restoreFilterFiles()); // @return bool
-```
-
 -   **Add file and/ path to filterFile() rejection**
 
 ```php
 $file = "api/adminLists";
 
 var_dump(addToFilterFiles($file)); // @return integer/bool
+```
+
+-   **Restoring filterFile() rules to default**
+
+```php
+var_dump($ASSC->restoreFilterFiles()); // @return bool
 ```
 
 ### NOTE
