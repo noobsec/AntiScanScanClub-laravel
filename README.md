@@ -1,6 +1,7 @@
 # AntiScanScanClub
 
 [![GitHub (pre-)release](https://img.shields.io/github/release/noobsec/AntiScanScanClub-laravel/all.svg)](https://github.com/noobsec/AntiScanScanClub-laravel/releases)
+[![Built for Laravel](https://img.shields.io/badge/Built_for-Laravel-green.svg)](https://laravel.com/)
 [![Build Status](https://img.shields.io/travis/noobsec/AntiScanScanClub-laravel/master.svg)](https://travis-ci.org/noobsec/AntiScanScanClub-laravel)
 [![Total Downloads](https://img.shields.io/packagist/dt/noobsec/antiscanscanclub-laravel.svg)](https://packagist.org/packages/noobsec/antiscanscanclub-laravel)
 [![LICENSE](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
