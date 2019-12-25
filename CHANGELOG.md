@@ -2,6 +2,12 @@
 
 All notable changes to `AntiScanScanClub` will be documented in this file.
 
+## Version 2.0.3
+
+### Added
+
+-   Filter files database
+
 ## Version 2.0.2
 
 ### Added
