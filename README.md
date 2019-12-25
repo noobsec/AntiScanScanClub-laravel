@@ -238,6 +238,11 @@ If you discover any security related issues, please email root@noobsec.org inste
 -   [maurosoria](https://github.com/maurosoria)
 -   [All Contributors](../../contributors)
 
+## Supporting Materials
+
+- [Paper](https://drive.google.com/open?id=1djDE_2HNRL_V2-mePtIKz_UGKxeIXdXI)
+- [Slide](https://docs.google.com/presentation/d/1PWu_0Tp35GDu5caMJus9qBbkLiEAporAUx9wgCdzsa4/edit?usp=sharing)
+
 ## License
 
 license. Please see the [LICENSE file](LICENSE) for more information.
