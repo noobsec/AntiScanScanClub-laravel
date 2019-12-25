@@ -249,4 +249,4 @@ license. Please see the [LICENSE file](LICENSE) for more information.
 
 ## Version
 
-**Current version is 2.0.2** and still development.
+**Current version is 2.0.3** and still development.
