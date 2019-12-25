@@ -5,7 +5,7 @@ use Orchestra\Testbench\TestCase;
 
 class AntiScanScanClubTest extends Orchestra\Testbench\TestCase
 {
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		$this->ASSC = new AntiScanScanClub();
 	}
